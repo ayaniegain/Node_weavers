@@ -1,0 +1,20 @@
+Product-Backend/
+├─ controllers/
+│  └─ productsController.js
+├─ models/
+│  └─ productsModel.js
+├─ routers/
+│  ├─ v1/
+│  │  ├─ auth/
+│  │  ├─ product/
+│  │  │  └─ productsRouter.js
+│  │  └─ index.js
+│  └─ index.js
+├─ schemas/
+│  └─ productsSchema.js
+├─ sevices/
+│  └─ productsService.js
+├─ app.js
+├─ index.js
+├─ package-lock.json
+└─ package.json
