@@ -1,5 +1,5 @@
 import  express from 'express'
-const router = express.Router(); //shall i need to import router where it is use?
+const router = express.Router(); 
 
 import v1router from "./v1/index.js";
 

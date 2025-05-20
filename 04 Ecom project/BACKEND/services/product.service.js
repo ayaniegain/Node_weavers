@@ -1,11 +1,11 @@
 import Product from "../model/product.model.js";
 
 export async function allProduct() {
-  return await Product.find({}); //where return where not return ?
+  return await Product.find({});
 }
 
 export async function addNewProduct(productData) {
-  const newProduct = new Product(productData); //how it know it is arry of oject ?
+  const newProduct = new Product(productData);
 
   return await newProduct.save();
 }

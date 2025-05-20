@@ -7,9 +7,9 @@ import {
   fetchAllProducts,
 } from "../../../controllers/product.controller.js";
 
-router.get("/products", fetchAllProducts);
+router.get("/", fetchAllProducts);
 
-router.post("/addProduct", createProduct);
-router.delete("/deleteProduct/:id", deleteProduct);
+router.post("/", createProduct);
+router.delete("/:id", deleteProduct);
 
 export default router;
