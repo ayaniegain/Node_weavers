@@ -15,7 +15,9 @@ function FetchData({ children }) {
       }
       let data = await response.json();
 
-      setAllProducts(data.products.map((item) => ({ ...item, quantity: 1, wishList: false })));
+      setAllProducts(
+        data.products.map((item) => ({ ...item, quantity: 1, wishList: false }))
+      );
       setOriginalProducts(
         data.products.map((item) => ({ ...item, quantity: 1 }))
       );
@@ -28,14 +30,19 @@ function FetchData({ children }) {
     getAllProducts();
   }, []);
 
-  
- function showCartDetails(totalPrice, Cartlength, deliveryCharge) {
-  setCartDetails({ totalPrice, Cartlength, deliveryCharge });
-}
+  function showCartDetails(totalPrice, Cartlength, deliveryCharge) {
+    setCartDetails({ totalPrice, Cartlength, deliveryCharge });
+  }
 
   return (
     <FetchDataContext.Provider
-      value={{ allProducts, setAllProducts, originalProducts,cartDetails ,showCartDetails}}
+      value={{
+        allProducts,
+        setAllProducts,
+        originalProducts,
+        cartDetails,
+        showCartDetails,
+      }}
     >
       {children}
     </FetchDataContext.Provider>
@@ -47,4 +54,3 @@ export default FetchData;
 export function useFetchData() {
   return useContext(FetchDataContext);
 }
-
