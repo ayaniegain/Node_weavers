@@ -9,7 +9,6 @@ function Details() {
   const { allProducts } = useFetchData();
   let cartItems = useFetchCart();
 
-  console.log(cartItems);
 
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();

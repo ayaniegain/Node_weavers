@@ -68,7 +68,7 @@ function Product({ product, avgRating, handleClick }) {
         )}
       </div>
 
-      {/* Product Details */}
+      {/* Product description  */}
       <div className="mt-4">
         <h3 className="text-lg font-semibold">{product.title}</h3>
         <p className="text-gray-500 text-sm">

@@ -1,43 +1,70 @@
-import { addNewUser, getLoggedIn } from "../services/auth.service.js";
+import {
+  addNewUser,
+  getLoggedIn,
+  // loggedOut, 👍
+} from "../services/auth.service.js";
 
-
+// REGISTER
 export async function register(req, res) {
+  const { fullname, email, password } = req.body;
+  const userData = { fullname, email, password };
 
-  let {fullname,email,password}=req.body
-
-  let userData={fullname,email,password}
   try {
-
-  const userExists = await getLoggedIn(email);
+    const userExists = await getLoggedIn(email);
     if (userExists) {
-      return res.status(400).json({ message: "User already exists" });
+      return res.status(400).json({ message: "User already exists", success: false });
     }
 
+    const registerUser = await addNewUser(userData);
 
-    const registerUser = await addNewUser(userData); 
- res.status(201).json({ message: "User registered successfully", user: registerUser })
+    if (!registerUser) {
+      return res.status(500).json({ message: "User registration failed", success: false });
+    }
+
+    console.log("registerUser", registerUser);
+    return res.status(201).json({
+      message: "User registered successfully",
+      success: true,
+    });
   } catch (error) {
-    res.status(500).json({ error: "Failed to register user" });
+    return res.status(500).json({
+      message: "Failed to register user",
+      success: false,
+    });
   }
 }
 
+// LOGIN
 export async function login(req, res) {
-  let {email,password}=req.body
+  const { email, password } = req.body;
 
   try {
     const user = await getLoggedIn(email);
+
     if (!user) {
-      return res.status(404).json({ message: "User not found" });
+      return res.status(404).json({ message: "User not found", success: false });
     }
 
-
-    if (user.password!=password) {
-     return res.status(401).json({ message: "Invalid password" });
-      
+    if (user.password !== password) {
+      return res.status(401).json({ message: "Invalid password", success: false });
     }
-    res.status(200).json({"message":`${result.fullname} logged in successfully`}); 
 
+    const userloggedin = {
+      id: user._id,
+      fullname: user.fullname,
+      email: user.email,
+    };
+
+    console.log(userloggedin);
+    return res.status(200).json({
+      message: `${userloggedin.fullname} logged in successfully`,
+      success: true,
+      data: userloggedin,
+    });
   } catch (error) {
-    res.status(500).json({ error: "Login failed"  });
+    return res.status(500).json({
+      message: "Login failed",
+      success: false,
+    });
   }
 }

@@ -21,7 +21,6 @@ const dispatch=useDispatch()
   function handlePayment() {
     dispatch(clearCart())
     toast.success("PAYMENT SUCCESSFUL");
-    window.location.reload();
 
     navigate("/");
   }
