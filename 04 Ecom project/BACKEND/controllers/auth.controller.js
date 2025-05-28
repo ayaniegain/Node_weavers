@@ -3,6 +3,7 @@ import {
   getLoggedIn,
   // loggedOut, 👍
 } from "../services/auth.service.js";
+import { createToken } from "../services/token.service.js";
 
 // REGISTER
 export async function register(req, res) {
@@ -56,10 +57,18 @@ export async function login(req, res) {
     };
 
     console.log(userloggedin);
+
+    //createtoken
+    let token=await createToken(userloggedin)
+
+    console.log(token)
     return res.status(200).json({
       message: `${userloggedin.fullname} logged in successfully`,
       success: true,
       data: userloggedin,
+      token:{
+        accessToken: token
+      }
     });
   } catch (error) {
     return res.status(500).json({
