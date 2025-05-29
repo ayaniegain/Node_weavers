@@ -7,7 +7,7 @@ import { createToken } from "../services/token.service.js";
 
 // REGISTER
 export async function register(req, res) {
-  console.log(req.body)
+
 
   const { fullname, email, password } = req.body;
   const userData = { fullname, email, password };
@@ -40,7 +40,6 @@ export async function register(req, res) {
 // LOGIN
 export async function login(req, res) {
   const { email, password } = req.body;
-
 
   try {
     const user = await getLoggedIn(email);
