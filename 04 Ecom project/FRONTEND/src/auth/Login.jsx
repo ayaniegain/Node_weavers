@@ -1,15 +1,18 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import Authimg from "../../src/assets/img/auth-background.jpg";
 import { toast } from "react-toastify";
 
-import { NavLink, useLocation, useNavigate } from "react-router";
-import { signIn, useAuth } from "../Redux/authSlice";
+import { NavLink, useNavigate } from "react-router";
+import { fetchLoginAuth, reset, useAuth } from "../Redux/authSlice";
 import { useDispatch } from "react-redux";
 
 function Login() {
   let dispatch = useDispatch();
   let navigate = useNavigate();
+
+  let { message, loading, success, error } = useAuth();
+
 
   let initlogin = {
     email: "",
@@ -22,35 +25,32 @@ function Login() {
   }
   const handleSubmit = (e) => {
     e.preventDefault();
-  
+
     if (userData.email === "" || userData.password === "") {
       toast.warn("Enter proper user data!");
-    } else {
-      let storedUsers = JSON.parse(localStorage.getItem("authRegister")) || [];
-  
-      let loginUserDetails = storedUsers.find(
-        (singleuser) =>
-          singleuser.email === userData?.email &&
-          singleuser.password === userData?.password
-      );
-  
-      if (loginUserDetails) {
-        dispatch(signIn(loginUserDetails));
-        toast.success("Login successfully!");
-  
-        let redirectPath = localStorage.getItem("redirectUrl")
-          ? JSON.parse(localStorage.getItem("redirectUrl"))
-          : "/";
-  
-        localStorage.removeItem("redirectUrl");
-        navigate(redirectPath, { replace: true });
-      } else {
-        toast.warn("User doesn't exist!");
-      }
+      return;
     }
+    dispatch(fetchLoginAuth(userData));
     setUserData(initlogin);
   };
-  
+
+  useEffect(() => {
+    if (message && success) {
+      toast.success(message || "Login successfully!");
+      let redirectPath = localStorage.getItem("redirectUrl")
+        ? JSON.parse(localStorage.getItem("redirectUrl"))
+        : "/";
+
+      localStorage.removeItem("redirectUrl");
+      navigate(redirectPath, { replace: true });
+
+      dispatch(reset());
+    } else {
+      toast.error(message);
+
+      dispatch(reset());
+    }
+  }, [message, success, error, navigate, dispatch]);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">

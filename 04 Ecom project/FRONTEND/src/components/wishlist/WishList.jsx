@@ -6,7 +6,6 @@ import { useNavigate } from "react-router";
 function WishList() {
   let { wishlist, dispatch } = useFetchWishList();
 
-  console.log(wishlist)
   const navigate = useNavigate();
 
   function handleClick(id) {

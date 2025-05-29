@@ -12,10 +12,9 @@ function Cart() {
   let { loginUser } = useAuth();
   let { showCartDetails } = useFetchData();
 
-  let [text,setText]=useState("")
-  let [couponApplied,setCouponApplied]=useState(false)
+  let [text, setText] = useState("");
+  let [couponApplied, setCouponApplied] = useState(false);
 
-  
   const cartSubtotal =
     cartItems?.length > 0
       ? cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0)
@@ -23,40 +22,33 @@ function Cart() {
 
   let delivery = 0;
 
-  cartItems?.length > 0 ? !couponApplied ? (delivery = 12) :0 : 0;
+  cartItems?.length > 0 ? (!couponApplied ? (delivery = 12) : 0) : 0;
 
   useEffect(() => {
     showCartDetails(cartSubtotal, cartItems?.length, delivery);
-  }, [cartItems,delivery]);
-
+  }, [cartItems, delivery]);
 
   function checkRef() {
-    navigator.clipboard.writeText(ref.current.innerText)
-    if ( cartItems?.length > 0) {
-      
-      setText(ref.current.innerText)
+    navigator.clipboard.writeText(ref.current.innerText);
+    if (cartItems?.length > 0) {
+      setText(ref.current.innerText);
     }
   }
-  
-  function appliedCoupon(){
-    
-    if (text.toLocaleUpperCase().trim()==="DELIVERY") {
-      
+
+  function appliedCoupon() {
+    if (text.toLocaleUpperCase().trim() === "DELIVERY") {
       toast.success(`Coupon Applied !!`);
-      setCouponApplied(true)
-    }else{
-      
+      setCouponApplied(true);
+    } else {
       toast.warning(`${text}, Invalid Coupon `);
     }
-
   }
 
-  function removeCoupon(){
+  function removeCoupon() {
     toast.success(`Removed Coupon !!`);
-    setCouponApplied(false)
-    setText("")
+    setCouponApplied(false);
+    setText("");
   }
-
 
   return (
     <div className="min-h-screen bg-gray-100 py-10 relative">
@@ -107,37 +99,44 @@ function Cart() {
               Coupon Code
             </h2>
             <p className="text-gray-600 mb-4">
-              Apply a coupon <span onClick={checkRef}  ref={ref} className="text-orange-400 font-bold line-through borde-2 bg-teal-800 border-gray-500 h-6 text-center w-20 inline-block cursor-pointer hover:no-underline ">DELIVERY</span> to get  free delivery.
+              Apply a coupon{" "}
+              <span
+                onClick={checkRef}
+                ref={ref}
+                className="text-orange-400 font-bold line-through borde-2 bg-teal-800 border-gray-500 h-6 text-center w-20 inline-block cursor-pointer hover:no-underline "
+              >
+                DELIVERY
+              </span>{" "}
+              to get free delivery.
             </p>
-            
 
-              <input
+            <input
               type="text"
               className="border p-2 w-full rounded-md"
               placeholder="Enter Coupon Code"
-              disabled ={cartItems?.length == 0}
-value={text}
-              onChange={(e)=>setText(e.target.value)}
-              />
-            
-            
+              disabled={cartItems?.length == 0}
+              value={text}
+              onChange={(e) => setText(e.target.value)}
+            />
 
             {cartItems?.length > 0 ? (
               <>
-             {
-            couponApplied &&  couponApplied ? 
-              
-              <button className="w-full bg-orange-900 text-white px-4 py-2 mt-2 rounded-md hover:bg-orange-700" onClick={removeCoupon}>
-             REMOVE COUPON
-              </button>
-              :
-              <button className="w-full bg-teal-900 text-white px-4 py-2 mt-2 rounded-md hover:bg-teal-700" onClick={appliedCoupon}>
-                APPLY COUPON
-                </button>
-              
-            }
-            </>
-                
+                {couponApplied && couponApplied ? (
+                  <button
+                    className="w-full bg-orange-900 text-white px-4 py-2 mt-2 rounded-md hover:bg-orange-700"
+                    onClick={removeCoupon}
+                  >
+                    REMOVE COUPON
+                  </button>
+                ) : (
+                  <button
+                    className="w-full bg-teal-900 text-white px-4 py-2 mt-2 rounded-md hover:bg-teal-700"
+                    onClick={appliedCoupon}
+                  >
+                    APPLY COUPON
+                  </button>
+                )}
+              </>
             ) : (
               <button
                 className="w-full bg-gray-300 text-white px-4 py-2 mt-2 rounded-md "
@@ -156,8 +155,21 @@ value={text}
             </p>
             <p className="flex justify-between mb-2">
               {/* Delivery Charges{" "} */}
-              <span className={`font-medium ${couponApplied ?"line-through":"no-underline"} `}> Delivery Charges</span>
-              <span className={`font-medium ${couponApplied ?"line-through":"no-underline"} `}>${delivery.toFixed(2)}</span>
+              <span
+                className={`font-medium ${
+                  couponApplied ? "line-through" : "no-underline"
+                } `}
+              >
+                {" "}
+                Delivery Charges
+              </span>
+              <span
+                className={`font-medium ${
+                  couponApplied ? "line-through" : "no-underline"
+                } `}
+              >
+                ${delivery.toFixed(2)}
+              </span>
             </p>
             <p className="flex justify-between mb-4 font-semibold text-lg">
               Grand Total <span>${(cartSubtotal + delivery).toFixed(2)}</span>

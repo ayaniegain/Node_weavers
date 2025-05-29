@@ -1,18 +1,19 @@
-import React, { useState } from "react";
+import React, {  useEffect, useState } from "react";
 import { NavLink, useNavigate } from "react-router";
 import AuthRegimg from "../../src/assets/img/auth-reg.jpg";
 import { toast } from "react-toastify";
 import { useDispatch } from "react-redux";
-import { signUp } from "../Redux/authSlice";
+import { fetchRegisterAuth, reset, useAuth } from "../Redux/authSlice";
 
 function SignUp() {
   let navigate = useNavigate();
   let dispatch = useDispatch();
-
   let [check, setCheck] = useState(false);
 
+   let {message,loading,success,error}=useAuth()
+
   let initregister = {
-    name: "",
+    fullname: "",
     email: "",
     password: "",
   };
@@ -22,36 +23,36 @@ function SignUp() {
     setUserData({ ...userData, [e.target.name]: e.target.value });
   }
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!check) {
       toast.warn("Checkbox should clicked");
       return;
     }
-    if (
-      userData.name === "" ||
-      userData.email === "" ||
-      userData.password === ""
-    ) {
-      toast.warn("enter proper user data !");
-    }
-    let getAuth = JSON.parse(localStorage.getItem("authRegister")) || [];
-
-    let userExists = getAuth.some((auth) => auth.email === userData.email);
-
-    if (userExists) {
-      toast.error("User already registered!");
+    const { fullname, email, password } = userData;
+    if (!fullname || !email || !password) {
+      toast.warn("Please fill out all fields.");
       return;
     }
 
-    toast.success("User registered successfully!");
-
-    dispatch(signUp(userData));
-
-    navigate("/login");
+    const data = await dispatch(fetchRegisterAuth(userData)).unwrap();
 
     setUserData(initregister);
   };
+
+
+
+  useEffect(() => {
+    if (message && success) {
+      toast.success(message);
+      navigate('/login');
+      dispatch(reset())
+    }else{
+       toast.error(message);
+       dispatch(reset());
+    }
+ 
+  }, [message, success, error, navigate, dispatch]);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
@@ -67,11 +68,11 @@ function SignUp() {
 
           <div className="mt-6">
             <label className="block text-gray-700 text-sm font-medium">
-              User Name
+              Full Name
             </label>
             <input
-              value={userData.name}
-              name="name"
+              value={userData.fullname}
+              name="fullname"
               type="text"
               placeholder="Enter User Name"
               onChange={handleChange}

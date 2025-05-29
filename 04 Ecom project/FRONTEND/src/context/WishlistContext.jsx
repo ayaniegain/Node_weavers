@@ -11,14 +11,13 @@ function WishListContextList({ children }) {
   function wishListReducer(state, action) {
     switch (action.type) {
       case "ADD_ITEM": {
-      
-
-        return [...state, allProducts.find((item) => item.id === Number(action.payload))];
+        return [
+          ...state,
+          allProducts.find((item) => item.id === Number(action.payload)),
+        ];
       }
 
       case "REMOVE_ITEM": {
-        
-
         return state.filter((item) => item.id !== Number(action.payload));
       }
 
@@ -29,7 +28,11 @@ function WishListContextList({ children }) {
 
   const [wishlist, dispatch] = useReducer(wishListReducer, initiallist);
 
-  return <wishListContext.Provider value={{ wishlist, dispatch }}>{children}</wishListContext.Provider>;
+  return (
+    <wishListContext.Provider value={{ wishlist, dispatch }}>
+      {children}
+    </wishListContext.Provider>
+  );
 }
 
 export default WishListContextList;
