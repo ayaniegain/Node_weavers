@@ -6,10 +6,11 @@ import {
   deleteProduct,
   fetchAllProducts,
 } from "../../../controllers/product.controller.js";
+import { authmiddleWare } from "../../../middleware/auth.middleware.js";
 
 router.get("/", fetchAllProducts);
 
 router.post("/", createProduct);
-router.delete("/:id", deleteProduct);
+router.delete("/:id", authmiddleWare, deleteProduct);
 
 export default router;

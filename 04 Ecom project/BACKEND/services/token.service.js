@@ -1,27 +1,41 @@
-import Token from "../model/token.model.js";
 import jwt from "jsonwebtoken";
-
 import dotenv from "dotenv";
+
 dotenv.config();
 
-export async function createToken(tokenData) {
-  const exp = Math.floor(Date.now() / 1000) + 60 * 60;
+const JWT_SECRET = process.env.JWT_SECRET;
 
-  let token = jwt.sign({ data: tokenData, exp }, process.env.JWT_SECRECT);
+// Token expiration: 1 hour
+const TOKEN_EXPIRATION = 60 * 60;
 
-  const newToken = new Token({ token, expireAt: exp });
+export function createToken(tokenData) {
+  const exp = Math.floor(Date.now() / 1000) + TOKEN_EXPIRATION;
 
-  return await newToken.save();
+  const token = jwt.sign(
+    {
+      data: tokenData,
+      exp,
+    },
+    JWT_SECRET
+  );
+
+  return token;
+
+  // If saving to DB is required:
+  // const newToken = new Token({ token, expireAt: exp });
+  // return await newToken.save();
 }
 
-export  function varifyToken(token) {
-  jwt.verify(token, process.env.JWT_SECRECT, (decodedToken) => {
-    if (!decodedToken) {
-        return false;
-    } else {
-        return decodedToken;
-    }
-  });
+export function varifyToken(token) {
+  console.log("tvoken", token);
 
- 
+  try {
+    const decoded = jwt.verify(token, JWT_SECRET);
+
+    console.log("decoded", decoded);
+    return decoded;
+  } catch (err) {
+    console.error("JWT verification failed:", err.message);
+    return false;
+  }
 }
