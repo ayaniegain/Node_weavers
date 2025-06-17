@@ -16,8 +16,6 @@ dbConnected()
   credentials: true 
 }));
 
-
-
 app.use("/api", appRoutes);
 
 export default app;

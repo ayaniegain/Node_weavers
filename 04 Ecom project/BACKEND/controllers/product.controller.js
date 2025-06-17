@@ -15,10 +15,21 @@ export async function createProduct(req, res) {
 
 export async function fetchAllProducts(req, res) {
 
-  let {search,sortBy ,category, order } =req.query
+  // console.log(req.query)
+  let { productName, category, minPrice, maxPrice } = req.query;
+
+  
 
   try {
-    const result = await allProduct({search,sortBy ,category, order});
+    const result = await allProduct({
+      productName,
+      category,
+      minPrice,
+      maxPrice,
+    });
+
+  // console.log("result",result)
+
     res.json(result);
   } catch (error) {
     res.status(500).json({ error: "Failed to fetch products" });
